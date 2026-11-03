@@ -222,7 +222,11 @@ stacking flat against the porphyrin, which no deposited structure in this panel 
 | Organisers' structure validator | **valid**, no errors |
 | PoseBusters (22 checks per complex) | **20 / 20 fully clean** |
 | Structures present | 20, none missing or unexpected |
-| Protein sequence | 465 residues, 100% identical to UniProt P08684 |
+| Protein sequence | **0 mismatches** against UniProt P08684 over the resolved range |
+
+The complexes carry 462 resolved residues (`7UFB`, 16 files) or 450 (`6DAA`, 4 files), numbered
+27–497 — the standard N-terminally truncated CYP3A4 construct — and every resolved residue
+matches UniProt P08684.
 
 Fe–N contacts at 2.15–2.77 Å pass `minimum_distance_to_inorganic_cofactors` — PoseBusters does
 not treat genuine coordination as a clash.

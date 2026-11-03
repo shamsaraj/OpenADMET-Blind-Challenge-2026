@@ -126,13 +126,15 @@ because both source submissions had already been scored, the final submission ta
 endpoint's column from whichever source scored better on that endpoint** and copies it
 verbatim. No model was retrained and no new prediction was generated.
 
-| Endpoint | Source | Blind ST-RAE |
-|---|---|---|
-| CYP1A2 | `17_8` | **0.4901** |
-| CYP2C9 | `23_3` | **0.4427** |
-| CYP2D6 | `23_3` | **0.5457** |
-| CYP3A4 | `23_3` | **0.4210** |
-| **Macro average** | | **0.4749** |
+| Endpoint | `17_8` | `23_3` | Source taken | Submitted ST-RAE |
+|---|---|---|---|---|
+| CYP1A2 | **0.4901** | 0.5010 | `17_8` | **0.4901** |
+| CYP2C9 | 0.4435 | **0.4427** | `23_3` | **0.4427** |
+| CYP2D6 | 0.5868 | **0.5457** | `23_3` | **0.5457** |
+| CYP3A4 | 0.4337 | **0.4210** | `23_3` | **0.4210** |
+| **Macro average** | 0.4885 | 0.4776 | | **0.4749** |
+
+All values are the organisers' per-endpoint blind ST-RAE.
 
 ![Per-endpoint blind error](figures/fig1_regression_endpoints.png)
 
