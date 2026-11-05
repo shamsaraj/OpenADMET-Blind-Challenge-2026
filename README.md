@@ -4,11 +4,17 @@ Method reports for the three submission tracks.
 
 **Author:** Jamal Shamsara
 
-| Track | Report | Submitted file | Blind score |
-|---|---|---|---|
-| Direct inhibition (regression) | [**regression.md**](regression.md) | `25_0_per_endpoint_best_regression_submission.csv` | MA-ST-RAE **0.4749** (**0.4593** on the full 750-compound reveal) |
-| Time-dependent inhibition (classification) | [**classification.md**](classification.md) | `10_25_majority_vote_classification_submission.csv` | MA-MCC **0.3846** |
-| CYP3A4 structure prediction (pose) | [**pose.md**](pose.md) | `24_9_manual_structures.zip` | pending |
+**Final results** (leaderboard released 2026-11-04, restricted to entrants with a method report):
+
+| Track | Report | Submitted file | Final score | Rank |
+|---|---|---|---|---|
+| Direct inhibition (regression) | [**regression.md**](regression.md) | `25_0_per_endpoint_best_regression_submission.csv` | MA-ST-RAE **0.4593** | 35 / 103 |
+| Time-dependent inhibition (classification) | [**classification.md**](classification.md) | `10_25_majority_vote_classification_submission.csv` | MA-MCC **0.3232** | 32 / 62 |
+| CYP3A4 structure prediction (pose) | [**pose.md**](pose.md) | `24_11_frozen_structures.zip` | LDDT-PLI **0.3608** | 34 / 38 |
+
+Where an earlier version of these reports quoted a different number (regression 0.4749,
+classification 0.3846), that was the interim-subset scoring of the same predictions; the
+final board scores the full 750-compound test set.
 
 Each report describes the **single best-scoring submission** for its track, not the full
 exploration behind it. Where a number is quoted it is the organisers' own blind score unless

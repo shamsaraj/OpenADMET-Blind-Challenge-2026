@@ -1,6 +1,8 @@
 # CYP3A4 structure prediction — protein–ligand pose
 
-**Submission:** `24_9_manual_structures.zip`
+**Submission:** `24_11_frozen_structures.zip`
+**Final score:** LDDT-PLI **0.3608**, BiSyRMSD 4.4045 Å, LDDT-LP 0.8308, Coverage 1.0 — rank
+**34 / 38**, Tier 2 of 4.
 **Author:** Jamal Shamsara
 
 ---
@@ -156,33 +158,38 @@ ligands), with `7UFB`, `6BDH` and `6DAA` in the good group in 9–10 of 10 folds
 
 ### 6.1 The submitted selection
 
-For the final submission, all 2,346 poses in the three good receptors were inspected
-**visually**, one PyMOL session per receptor, with every pose of every compound presented as a
-state and the measured Fe–N geometry available alongside. The final pose for each compound was
-chosen by eye against the criteria in §7, not by a score.
+The submitted poses come from a final round in which POSIT was re-run on **7UFB alone** at
+**50 poses per compound** for all 20 compounds — 951 poses, correct protonation throughout,
+no Vina. Deeper sampling of one good receptor turned out to beat the whole ten-receptor,
+ten-pose pool for several compounds: `OCNT-2312554` improved from 3.00 Å to 2.49 Å and
+`OCNT-2395436` from 2.76 Å to 2.41 Å, and eleven of twelve donors reached ≤2.49 Å in 7UFB
+alone. The earlier pools were **sampling-limited, not receptor-limited** — a result worth
+stating because multi-receptor ensemble docking is usually motivated by the opposite
+assumption.
+
+Poses were inspected visually in PyMOL. For compounds with a free aromatic nitrogen the
+session showed only poses whose nitrogen lay within 4.0 Å of the iron; for the eight with no
+donor it showed all 50. One compound, `OCNT-2395712`, reached only 7.59 Å in 7UFB across 48
+poses and was re-docked into `6MA6` and `6MA7` — the two receptors whose crystal ligands are
+themselves coordinating azoles — where all nine returned poses came from POSIT's
+template-biased HYBRID engine, the only place in this work where its template machinery
+engaged.
 
 ![Coordination geometry of the submitted poses](figures/fig3_pose_feN.png)
 
 | | |
 |---|---|
-| Receptors used | `7UFB` ×16, `6DAA` ×4 |
-| Engines | POSIT ×19, Vina ×1 |
-| Compounds with a donor N | 12 |
+| Receptors used | `7UFB` ×19, `6MA7` ×1 |
+| Engine | POSIT only |
+| Compounds with a donor N | 12, **all coordinating**, Fe–N 2.28–3.04 Å |
 | …in the 2.0–2.4 Å crystal window | 3 |
-| …within 2.6 Å | 6 |
 
-Four compounds with an available donor nitrogen were deliberately placed non-coordinating
-(5.7–13.4 Å). For two of them (`OCNT-2312554`, `OCNT-2395712`) no pose in the pool reaches the
-crystal window at all — their best is 3.00 Å and 2.74 Å, and the 1,2,3-triazole of the latter
-is the weakest donor class present (triazolium pKa ≈ 1.2 against ≈5.2 for pyridinium). For the
-other two, coordinating poses exist in the pool but were judged, on inspection, to be
-geometrically poor in other respects. This is a departure from the rule validated in §6 and is
-reported as such.
-
-One substitution was made after the manual selection: `OCNT-2313300` state 9 in `7UFB` failed
-PoseBusters' `minimum_distance_to_organic_cofactors` — the ligand pressed into the porphyrin —
-and was replaced by state 5 of the same receptor (Fe–N 2.34 Å), chosen from the
-PoseBusters-clean alternatives.
+Two substitutions were forced by the PoseBusters gate and are recorded in the selection
+sheet. `OCNT-2313300` state 9 in 7UFB pressed into the porphyrin and was replaced by state 5
+(2.34 Å). For `OCNT-2395712`, **eight of its nine poses failed** — every pose shorter than
+3.04 Å reached the iron only by pushing the scaffold into the porphyrin — so the single clean
+pose at 3.04 Å was used. That compound does not properly coordinate, but the reason is steric
+rather than electronic: the scaffold cannot reach the axial site without a violation.
 
 Each chosen pose was recombined with **its own** receptor's protein and heme, never with a
 common reference frame, because a pose generated in one receptor and written into another is
@@ -224,12 +231,12 @@ stacking flat against the porphyrin, which no deposited structure in this panel 
 | Structures present | 20, none missing or unexpected |
 | Protein sequence | **0 mismatches** against UniProt P08684 over the resolved range |
 
-The complexes carry 462 resolved residues (`7UFB`, 16 files) or 450 (`6DAA`, 4 files), numbered
-27–497 — the standard N-terminally truncated CYP3A4 construct — and every resolved residue
-matches UniProt P08684.
+The complexes carry 462 resolved residues (19 files, `7UFB`) or 463 (1 file, `6MA7`),
+numbered 26/27–497 — the standard N-terminally truncated CYP3A4 construct — and every
+resolved residue matches UniProt P08684.
 
-Fe–N contacts at 2.15–2.77 Å pass `minimum_distance_to_inorganic_cofactors` — PoseBusters does
-not treat genuine coordination as a clash.
+Fe–N contacts at 2.28–3.04 Å pass `minimum_distance_to_inorganic_cofactors` — PoseBusters
+does not treat genuine coordination as a clash.
 
 One packaging detail is worth recording for other entrants: the validator reads the ligand
 back and matches it to the expected SMILES with RDKit's
@@ -243,12 +250,90 @@ reproducible.
 
 - The receptor panel is effectively three distinct structures, not ten (§3), which caps what
   multi-receptor docking can contribute.
-- POSIT's template machinery never engaged on these ligands (§5), so most poses come from
-  template-free search — the component of POSIT with the least advantage over any other docking
-  program.
+- POSIT's template machinery barely engaged (§5), so most poses come from template-free
+  search — the component of POSIT with the least advantage over any other docking program.
+  The one exception is instructive: in `6MA6`/`6MA7`, whose crystal ligands are themselves
+  coordinating azoles, every returned pose came from the template-biased HYBRID engine.
 - No deposited CYP3A4 complex contains a nitrile ligand, so nitrile coordination has no
   template and no yardstick. A constructed ideal nitrile pose is sterically feasible in the
   roomier receptors, but no docked pose approaches it; in any case all three nitrile-bearing
   compounds also carry a pyridine nitrogen, which is the better donor, so the question is moot
   for this set.
-- Four compounds depart from the blind-validated coordination rule (§6.1).
+- One compound, `OCNT-2395712`, is submitted non-coordinating at 3.04 Å because its eight
+  shorter poses all fail PoseBusters (§6.1).
+- Selection remained the bottleneck throughout, and the final selection was made by eye —
+  which §10.1 shows was the wrong choice.
+
+
+---
+
+## 10. Final result, and the main finding
+
+**LDDT-PLI 0.3608, rank 34 / 38, Tier 2 of 4.** Coverage 1.0, so no structure was zeroed.
+
+### 10.1 Expert visual selection lost to a one-line geometric rule
+
+Four submissions were made from overlapping pose pools, differing only in how the pose was
+chosen:
+
+| submission | selection rule | LDDT-PLI |
+|---|---|---|
+| `24_4_posit_feN` | **automated: shortest free aromatic N to Fe** | **0.3939** |
+| `24_11_frozen` | manual visual, 951 poses, 7UFB | 0.3381 live / 0.3608 final |
+| `24_9_manual` | manual visual, 2,346 poses, 3 receptors | 0.3287 |
+| `24_5_prob` | POSIT probability alone | 0.2894 |
+
+Two independent rounds of careful visual inspection — by a medicinal chemist, with measured
+Fe–N distances, crystal references and PoseBusters verdicts to hand — both scored **below** a
+rule that fits on one line. This was not the result we expected and it is the most useful
+thing the track produced.
+
+The top and bottom rows form a controlled A/B over the same pose pool with one variable
+changed, isolating coordination geometry at **+0.1045 LDDT-PLI**. We are not aware of many
+prospective, blind tests of a pose-selection heuristic at this granularity.
+
+A caveat on the comparison: `24_4` was scored only on the live board and `24_11` on both, and
+the two scorings differ (`24_11` moved 0.3381 → 0.3608 for an identical file). The ranking of
+the four is robust to that shift, but the exact gap is not.
+
+### 10.2 Per-compound results
+
+The challenge's head-to-head endpoint exposes per-compound LDDT-PLI, so the full
+20 × 38 matrix is reconstructible. We placed in the field's top two on three compounds:
+
+| compound | ours | field median | field best | rank | donor N |
+|---|---|---|---|---|---|
+| `OCNT-2312966` | **0.6183** | 0.2128 | **0.6183** | **1 / 38** | no |
+| `OCNT-2313397` | 0.5048 | 0.4138 | 0.5069 | 2 / 38 | yes, 2.48 Å |
+| `OCNT-2535519` | 0.5082 | 0.3464 | 0.5288 | 2 / 38 | yes, 2.57 Å |
+
+`OCNT-2312966` — the 2-oxindole with no coordinating nitrogen, and the compound the field
+found hardest of all twenty — received the best pose anyone submitted. Three top-two finishes
+against an expectation of 1.05 gives p = 0.085, which is suggestive and not significant.
+
+We were in the bottom decile on five compounds, so there is no class of pose on which we
+outperformed as a group: both we and the field score higher on type-II-capable compounds than
+on the rest, and our margin behind the winner is *larger* on the type-II compounds
+(−0.151) than on the others (−0.077).
+
+### 10.3 A pattern we checked and rejected
+
+Our per-compound percentile correlates at **−0.527 (p = 0.017)** with how well the field did
+on each compound — the most negative value among all 38 entrants, with only 2 of 38 reaching
+significance. The natural reading is that a rigid geometric rule is relatively stronger where
+template-driven methods struggle.
+
+**We do not believe it.** Across entrants, mean score and that correlation are themselves
+related at +0.520 (p = 0.0008): any below-average entrant gets a negative value
+automatically, because scoring flatly ranks better where everyone scores low. Our standard
+deviation across compounds is 4th lowest of 38, but mean and SD correlate at +0.615 across
+entrants and our coefficient of variation is unremarkable. Selecting the most extreme of 38
+entrants also makes p = 0.017 roughly what chance would produce. Reported because the
+analysis was done, and the negative conclusion is the useful part.
+
+### 10.4 Ground truth
+
+The blinded Cryo-EM structures have not been released. The five CYP3A4 cryo-EM entries in the
+PDB (`38FU`, `38FV`, `38FW`, `38FX`, `38FY`) were released 2026-09-30, before the challenge
+closed, and are ritonavir, ketoconazole, azamulin and vardenafil complexes. Candidate
+submissions that were built and gated but not uploaded therefore cannot be scored.

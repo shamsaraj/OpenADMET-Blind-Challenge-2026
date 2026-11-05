@@ -1,8 +1,8 @@
 # Direct CYP inhibition — pIC50 regression
 
 **Submission:** `25_0_per_endpoint_best_regression_submission.csv`
-**Blind score:** macro-averaged ST-RAE **0.4749** across the four endpoints; the same
-predictions rescored on the full 750-compound reveal gave **0.4593**.
+**Final score:** macro-averaged ST-RAE **0.4593**, rank **35 / 103**, Tier 9 of 29.
+(The 0.4749 quoted during the challenge was the interim-subset scoring of the same file.)
 **Author:** Jamal Shamsara
 
 ---
@@ -170,3 +170,26 @@ results can mean.
   and reused unchanged, so that submissions remain comparable to one another.
 - Every submission is logged with its algorithm, hyperparameters, descriptor set and internal
   metrics, and the blind score was written back against the same row once known.
+
+
+---
+
+## 8. Final result
+
+| endpoint | rank | ST-RAE | MAE | R² | Spearman ρ | Kendall τ |
+|---|---|---|---|---|---|---|
+| **CYP2D6** | **21 / 103** | 0.5761 | 1.0007 | 0.3818 | 0.5129 | 0.3596 |
+| CYP1A2 | 27 / 103 | 0.4207 | 0.6812 | 0.6304 | 0.8227 | 0.6267 |
+| CYP3A4 | 41 / 103 | 0.4007 | 0.4990 | 0.7229 | 0.8591 | 0.6777 |
+| CYP2C9 | 52 / 103 | 0.4398 | 0.5311 | 0.6282 | 0.8221 | 0.6337 |
+| **overall** | **35 / 103** | **0.4593** | 0.6780 | 0.5908 | 0.7542 | 0.5744 |
+
+The endpoint ordering is the informative part. **CYP2D6 places best (21 / 103)** and is the
+endpoint the whole field finds hardest — field median ST-RAE 0.712, against 0.440–0.518 for
+the other three. It is also the endpoint that resisted every architectural and
+feature-engineering change we tried and moved only when censored negatives from the external
+PubChem qHTS panel were added as supervision on the scored heads (§4.2, §6). CYP2C9, which
+the field finds comparatively easy, is where we place worst.
+
+In absolute terms this is a relative-placement result, not a competitive one: we are 0.141
+behind the CYP2D6 field best and 0.155 behind on CYP2C9.

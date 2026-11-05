@@ -1,7 +1,8 @@
 # Time-dependent inhibition — binary classification
 
 **Submission:** `10_25_majority_vote_classification_submission.csv`
-**Blind score:** macro-averaged MCC **0.3846** (CYP2D6 **0.3528**, CYP3A4 **0.4164**)
+**Final score:** macro-averaged MCC **0.3232**, rank **32 / 62**, Tier 3 of 5.
+(The 0.3846 quoted during the challenge was the interim-subset scoring of the same file.)
 **Author:** Jamal Shamsara
 
 ---
@@ -155,3 +156,29 @@ An overfitting guard rejected any configuration with `(train − CV) / train > 0
 - Feature sets and fitted preprocessors were frozen before modelling and reused unchanged.
 - Each voter's provenance — model, feature variant, target rate, achieved rate and threshold —
   is recorded per endpoint, and the blind score written back once known.
+
+
+---
+
+## 8. Final result
+
+| endpoint | rank | MCC | Accuracy | Precision | Recall | F1 |
+|---|---|---|---|---|---|---|
+| CYP3A4_is_TDI | 36 / 62 | 0.4289 | 0.7623 | 0.6297 | 0.5642 | 0.5946 |
+| CYP2D6_is_TDI | 30 / 62 | 0.2175 | 0.9210 | 0.2903 | 0.2323 | 0.2557 |
+| **overall** | **32 / 62** | **0.3232** | 0.8416 | 0.4600 | 0.3982 | 0.4251 |
+
+Tiers 1 and 2 hold 3 and 27 entrants, so 30 are above us and we are statistically
+indistinguishable from the 26 others sharing Tier 3 — the middle of the field.
+
+**On the two different numbers.** The live board reported 0.3846 and the final board reports
+0.3232 for the same predictions: 0.3846 was the interim subset, 0.3232 the full 750
+compounds. The regression track moved the same way for the same reason. Comparing across the
+two scorings is meaningless.
+
+**CYP2D6_is_TDI stays the weak endpoint** at MCC 0.2175 with recall 0.23 — the designed
+consequence of rate-matching a 6.7% target prevalence onto a 21.6%-positive training set
+(§2), which buys precision and accuracy (0.921) at recall's expense. A TabPFN null
+experiment had already shown this endpoint to be feature-limited rather than model-limited,
+with local AUC 0.54–0.61 across every estimator family tried, so the ceiling is in the
+representation.
