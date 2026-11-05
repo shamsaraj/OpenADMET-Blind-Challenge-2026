@@ -333,7 +333,111 @@ analysis was done, and the negative conclusion is the useful part.
 
 ### 10.4 Ground truth
 
-The blinded Cryo-EM structures have not been released. The five CYP3A4 cryo-EM entries in the
-PDB (`38FU`, `38FV`, `38FW`, `38FX`, `38FY`) were released 2026-09-30, before the challenge
-closed, and are ritonavir, ketoconazole, azamulin and vardenafil complexes. Candidate
-submissions that were built and gated but not uploaded therefore cannot be scored.
+The blinded Cryo-EM structures were published to the HuggingFace dataset
+`openadmet/cyp-challenge-train-test` (`structures_unblinded/`) on 2026-11-05, without an
+announcement — the changelog still states the structure ground truth is withheld. They are
+phenix real-space-refined models at 3.50 Å, and the `LIG` heavy-atom count matches the
+challenge SMILES for all 20 compounds. Section 11 scores every submission against them.
+
+
+---
+
+## 11. Ligand RMSD against the released ground truth
+
+### 11.1 Method
+
+The six submissions used **different crystal receptors**, so the ligands are not in a common
+frame and a naive RMSD would be meaningless. For each compound and submission the submitted
+protein is **superposed onto the ground truth** by Kabsch on shared Cα atoms (≥100 required),
+the ligand is carried through that transform, and the comparison uses
+`rdMolAlign.CalcRMS` — symmetry-corrected, and deliberately **not** superposing, since
+`GetBestRMS` would align the ligand onto its target and report conformer similarity while
+discarding the placement error.
+
+Several ground-truth entries hold 2–3 protein chains and up to **6 ligand copies**
+(`OCNT-2313300` has two sites per chain). Every copy is scored after superposing on its own
+chain and the best is reported, as the challenge's symmetry-corrected BiSyRMSD does.
+
+Both ligands are built by transferring the challenge SMILES topology onto the PDB
+coordinates rather than by `AssignBondOrdersFromTemplate`: RDKit's proximity bonding on a
+3.5 Å model perceives extra bonds — 31 bonds and a 5-valent carbon for `OCNT-2312966` — and
+since the template is then a *subgraph*, the match succeeds while the spurious bonds survive
+and sanitisation fails. Matching single-bonded graphs and copying coordinates works on all 20.
+
+### 11.2 Validation
+
+For the four submissions that were scored, our mean RMSD orders them **exactly** as the
+organisers did — Spearman **+1.000** against BiSyRMSD and **−1.000** against LDDT-PLI, mean
+absolute difference from official BiSyRMSD **0.20 Å**. The residual gap is expected, since
+BiSyRMSD superposes on the binding site rather than globally.
+
+### 11.3 The table
+
+Ligand RMSD to ground truth, Å. Best per compound in bold.
+
+| compound | donor N | 24_4 Fe-N rule | 24_5 probability | 24_8 deep Fe-N | 24_9 manual | 24_10 hybrid | 24_11 frozen |
+|---|---|---|---|---|---|---|---|
+| `OCNT-2312554` | yes | **4.41** | 7.25 | 5.96 | 7.10 | 5.96 | 4.82 |
+| `OCNT-2312966` | no | 6.46 | 6.46 | **2.17** | 5.30 | **2.17** | **2.17** |
+| `OCNT-2313038` | yes | **1.14** | 8.61 | **1.14** | **1.14** | **1.14** | 4.95 |
+| `OCNT-2313300` | yes | **2.42** | 3.79 | 3.89 | 4.33 | 3.89 | 4.56 |
+| `OCNT-2313397` | yes | 3.98 | 3.98 | 3.88 | **3.28** | 3.88 | **3.28** |
+| `OCNT-2313429` | no | **5.79** | 9.27 | 6.16 | 6.47 | 6.16 | 6.58 |
+| `OCNT-2315379` | no | 5.30 | 5.30 | **3.93** | **3.93** | **3.93** | **3.93** |
+| `OCNT-2395328` | no | **5.07** | 5.13 | 5.15 | 5.66 | 5.15 | 5.66 |
+| `OCNT-2395342` | no | 5.80 | 5.80 | **5.66** | **5.66** | **5.66** | **5.66** |
+| `OCNT-2395415` | yes | 5.46 | 4.53 | **3.73** | 5.21 | **3.73** | 3.94 |
+| `OCNT-2395436` | yes | 4.09 | 3.36 | 3.61 | 4.46 | **2.92** | 4.46 |
+| `OCNT-2395457` | yes | 5.03 | **2.82** | 5.29 | 7.65 | 5.29 | 3.90 |
+| `OCNT-2395460` | no | **4.42** | **4.42** | 6.60 | 4.88 | 6.60 | 6.57 |
+| `OCNT-2395464` | yes | 4.17 | 4.17 | 3.41 | 6.34 | 6.34 | **3.06** |
+| `OCNT-2395503` | yes | **1.69** | 3.95 | 3.52 | 3.75 | 3.52 | 4.00 |
+| `OCNT-2395645` | no | 2.80 | 2.80 | **2.57** | **2.57** | **2.57** | **2.57** |
+| `OCNT-2395712` | yes | 4.72 | 7.13 | 4.72 | **2.77** | 4.72 | 4.72 |
+| `OCNT-2395789` | yes | 4.42 | 4.42 | 4.35 | **3.91** | 3.94 | 3.91 |
+| `OCNT-2535422` | no | 4.37 | 4.37 | **4.00** | 5.99 | **4.00** | 5.99 |
+| `OCNT-2535519` | yes | 4.25 | 7.03 | **2.08** | 6.58 | **2.08** | 3.48 |
+| **mean** | | **4.29** | **5.23** | **4.09** | **4.85** | **4.18** | **4.41** |
+| **median** | | 4.41 | 4.47 | 3.91 | 5.04 | 3.94 | 4.23 |
+| **within 2 Å** | | 2 | 0 | 1 | 1 | 1 | 0 |
+| **official LDDT-PLI** | | 0.3939 | 0.2894 | not submitted | 0.3287 | not submitted | 0.3608 (final) |
+
+
+### 11.4 The Fe–N effect now has a confidence interval
+
+§6 measured the coordination rule at +0.1045 LDDT-PLI from a single blind A/B with no
+interval, because per-compound scores did not exist. They do now:
+
+| | |
+|---|---|
+| `24_4` Fe–N rule | mean RMSD **4.29 Å** |
+| `24_5` probability only | mean RMSD **5.23 Å** |
+| difference | **+0.94 Å**, 95% CI **[+0.11, +1.91]** (20,000 bootstrap resamples) |
+| paired Wilcoxon | **p = 0.041** |
+
+Nine of twenty poses are identical between the two; of the **11 that differ** the Fe–N rule
+is better on **8**, mean difference **+1.71 Å** (p = 0.042). The largest single gain is
+`OCNT-2313038`, **1.14 Å against 8.61 Å**. The interval is wide — twenty compounds — but it
+excludes zero.
+
+### 11.5 The two unsubmitted candidates were better, but not significantly
+
+| submission | mean RMSD | vs `24_4` | better on | paired p |
+|---|---|---|---|---|
+| **`24_8` deep Fe–N** *(never submitted)* | **4.09** | **−0.20** | 11/20 | 0.557 |
+| **`24_10` hybrid** *(never submitted)* | **4.18** | −0.11 | 10/20 | 0.845 |
+| `24_4` Fe–N rule | 4.29 | — | — | — |
+| `24_11` frozen *(final)* | 4.41 | +0.12 | 10/20 | 0.778 |
+| `24_9` manual | 4.85 | +0.56 | 8/20 | 0.117 |
+| `24_5` probability | 5.23 | +0.94 | 3/20 | **0.041** |
+
+Nominally better, statistically indistinguishable — consistent with this leaderboard being
+unable to resolve differences below ≈0.1 LDDT-PLI. The one significant row is the bottom
+one.
+
+### 11.6 The honest summary
+
+Only **2 of 120** compound–submission pairs land within 2 Å, and the best mean over the whole
+set is 4.09 Å. Even `OCNT-2312966`, where we placed first of 38 on LDDT-PLI, is 2.17 Å in our
+best submissions. None of our submissions placed most ligands correctly; the differences
+between them are differences between degrees of wrongness.

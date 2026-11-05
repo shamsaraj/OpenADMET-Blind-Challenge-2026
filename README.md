@@ -16,6 +16,11 @@ Where an earlier version of these reports quoted a different number (regression 
 classification 0.3846), that was the interim-subset scoring of the same predictions; the
 final board scores the full 750-compound test set.
 
+The pose track's ground-truth structures were released after the challenge closed, so
+[**pose.md** §11](pose.md) additionally scores **every** pose submission — including two that
+were built and never uploaded — by ligand RMSD against the deposited structures. The
+per-compound table is [`pose_rmsd_table.csv`](pose_rmsd_table.csv).
+
 Each report describes the **single best-scoring submission** for its track, not the full
 exploration behind it. Where a number is quoted it is the organisers' own blind score unless
 it is explicitly labelled as internal.
